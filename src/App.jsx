@@ -9,28 +9,19 @@ function App() {
 
   const passwordRef = useRef(null);
 
-  const passwordGenerator = () => {
+  const passwordGenerator = useCallback(() => {
     let pass = "";
     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    let num = "0123456789";
-    let special_char = `!@#$%&-_=+[]{};:'",.<>?/|\~`;
+    if (numberAllowed) str += "0123456789";
+    if (charAllowed) str += "!@#$%^&*-_+=[]{}~`";
 
-    if (numberAllowed) {
-      str += num;
-      // console.log(str);
-    }
-    if (charAllowed) {
-      str += special_char;
-      // console.log(str);
+    for (let i = 1; i <= length; i++) {
+      let char = Math.floor(Math.random() * str.length + 1);
+      pass += str.charAt(char);
     }
 
-    for (let i = 0; i < length; i++) {
-      let random = Math.floor(Math.random() * str.length);
-      pass += str.charAt(random);
-      // console.log(pass);
-    }
     setPassword(pass);
-  };
+  }, [length, numberAllowed, charAllowed, setPassword]);
   const copyPasswordToClipboard = () => {
     passwordRef.current?.select();
     window.navigator.clipboard.writeText(password);
